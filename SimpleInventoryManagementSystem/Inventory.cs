@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System.Diagnostics;
+using System.Runtime.CompilerServices;
 
 namespace SimpleInventoryManagementSystem
 {
@@ -28,7 +29,7 @@ namespace SimpleInventoryManagementSystem
             }
             Product product = new Product(name, price, quantity);
             inventory.Add(product);
-            Console.WriteLine("\nAdd product successfully");
+            Console.WriteLine("\nAdded product successfully");
         }
         public void ViewAllProducts()
         {
@@ -45,5 +46,46 @@ namespace SimpleInventoryManagementSystem
             }
 
         }
+        public void UpdateProduct()
+        {
+            Console.Write("Enter Product Name: ");
+            string ?name = Console.ReadLine();
+            Product selectedProduct = null;
+            foreach(Product product in inventory)
+            {
+                if (product.Name == name)
+                {
+                    selectedProduct = product;
+                }
+            }
+            if(selectedProduct == null)
+            {
+                Console.WriteLine("\nProduct was not found in the inventory");
+                return;
+            }
+            Console.WriteLine(selectedProduct);
+            string newName;
+            int newPrice, newQuantity;
+            try
+            {
+                Console.Write("Name: ");
+                newName = Console.ReadLine();
+                Console.Write("\nPrice: ");
+                newPrice = Convert.ToInt32(Console.ReadLine());
+                Console.Write("\nQuantity: ");
+                newQuantity = Convert.ToInt32(Console.ReadLine());
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("\nError occured in inputting the new product information\n");
+                Console.WriteLine(e);
+                return;
+            }
+            selectedProduct.Price = newPrice;
+            selectedProduct.Quantity = newQuantity;
+            selectedProduct.Name = newName;
+            Console.WriteLine($"Product information updated successfully!\n{selectedProduct.ToString()}");
+        }
+
     }
 }
