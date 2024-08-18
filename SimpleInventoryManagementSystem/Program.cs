@@ -25,6 +25,9 @@ namespace Program
                     case 2:
                         inventory.ViewAllProducts();
                         break;
+                    case 3:
+                        inventory.UpdateProduct();
+                        break;
                 }
             }
         }
