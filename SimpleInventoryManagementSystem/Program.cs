@@ -28,6 +28,9 @@ namespace Program
                     case 3:
                         inventory.UpdateProduct();
                         break;
+                    case 4:
+                        inventory.DeleteProduct();
+                        break;
                 }
             }
         }

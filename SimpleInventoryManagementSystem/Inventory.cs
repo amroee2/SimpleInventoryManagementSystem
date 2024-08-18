@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using System.Xml.Linq;
 
 namespace SimpleInventoryManagementSystem
 {
@@ -86,6 +87,40 @@ namespace SimpleInventoryManagementSystem
             selectedProduct.Name = newName;
             Console.WriteLine($"Product information updated successfully!\n{selectedProduct.ToString()}");
         }
-
+        public void DeleteProduct()
+        {
+            if(inventory.Count == 0)
+            {
+                Console.WriteLine("There are currently no produts in the inventory");
+                return;
+            }
+            Console.Write("Enter product name: ");
+            string? name = Console.ReadLine();
+            Product selectedProduct = null;
+            foreach (Product product in inventory)
+            {
+                if (product.Name == name)
+                {
+                    selectedProduct = product;
+                }
+            }
+            if (selectedProduct == null)
+            {
+                Console.WriteLine("\nProduct was not found in the inventory");
+                return;
+            }
+            Console.WriteLine(selectedProduct);
+            Console.WriteLine("Delete Product?\n1-Yes\n2-No");
+            int operation = Convert.ToInt32(Console.ReadLine());
+            switch (operation)
+            {
+                case 1:
+                    inventory.Remove(selectedProduct);
+                    Console.WriteLine("Product removed successfully\n");
+                    break;
+                case 2:
+                    return;
+            }
+        }
     }
 }
