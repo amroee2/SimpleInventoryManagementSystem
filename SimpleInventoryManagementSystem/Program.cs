@@ -31,6 +31,15 @@ namespace Program
                     case 4:
                         inventory.DeleteProduct();
                         break;
+                    case 5:
+                        Console.WriteLine("Enter product name:");
+                        string? name = Console.ReadLine();
+                        Product product = inventory.SearchForProduct(name);
+                        if(product == null)
+                        {
+                            Console.WriteLine("\nProduct was not found in the inventory");
+                        }
+                        break;
                 }
             }
         }

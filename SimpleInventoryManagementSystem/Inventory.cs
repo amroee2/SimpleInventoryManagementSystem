@@ -18,6 +18,12 @@ namespace SimpleInventoryManagementSystem
             {
                 Console.Write("Name: ");
                 name = Console.ReadLine();
+                Product selectedProduct = SearchForProduct(name);
+                if (selectedProduct != null)
+                {
+                    Console.WriteLine("Product already exists");
+                    return;
+                }
                 Console.Write("\nPrice: ");
                 price = Convert.ToInt32(Console.ReadLine());
                 Console.Write("\nQuantity: ");
@@ -51,20 +57,12 @@ namespace SimpleInventoryManagementSystem
         {
             Console.Write("Enter Product Name: ");
             string ?name = Console.ReadLine();
-            Product selectedProduct = null;
-            foreach(Product product in inventory)
-            {
-                if (product.Name == name)
-                {
-                    selectedProduct = product;
-                }
-            }
+            Product selectedProduct = SearchForProduct(name);
             if(selectedProduct == null)
             {
                 Console.WriteLine("\nProduct was not found in the inventory");
                 return;
             }
-            Console.WriteLine(selectedProduct);
             string newName;
             int newPrice, newQuantity;
             try
@@ -96,20 +94,13 @@ namespace SimpleInventoryManagementSystem
             }
             Console.Write("Enter product name: ");
             string? name = Console.ReadLine();
-            Product selectedProduct = null;
-            foreach (Product product in inventory)
-            {
-                if (product.Name == name)
-                {
-                    selectedProduct = product;
-                }
-            }
+            Product selectedProduct = SearchForProduct(name);
             if (selectedProduct == null)
             {
                 Console.WriteLine("\nProduct was not found in the inventory");
+
                 return;
             }
-            Console.WriteLine(selectedProduct);
             Console.WriteLine("Delete Product?\n1-Yes\n2-No");
             int operation = Convert.ToInt32(Console.ReadLine());
             switch (operation)
@@ -121,6 +112,23 @@ namespace SimpleInventoryManagementSystem
                 case 2:
                     return;
             }
+        }
+        public Product SearchForProduct(string? name)
+        {
+            Product selectedProduct = null;
+            foreach (Product product in inventory)
+            {
+                if (product.Name == name)
+                {
+                    selectedProduct = product;
+                }
+            }
+            if (selectedProduct == null)
+            {
+                return selectedProduct;
+            }
+            Console.WriteLine(selectedProduct);
+            return selectedProduct;
         }
     }
 }
