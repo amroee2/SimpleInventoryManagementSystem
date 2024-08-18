@@ -11,7 +11,7 @@ namespace Program
             while (true)
             {
                 Console.WriteLine("1-Add a product\n2-View all products\n3-Edit a product\n" +
-                    "4-Delete a product\n5-Search for a product\n0-Close the program");
+                    "4-Delete a product\n5-Search for a product\n0-Close the program\n");
                 int operation = Convert.ToInt32(Console.ReadLine());
 
                 switch (operation)
@@ -21,6 +21,9 @@ namespace Program
                         return;
                     case 1:
                         inventory.AddProduct();
+                        break;
+                    case 2:
+                        inventory.ViewAllProducts();
                         break;
                 }
             }
