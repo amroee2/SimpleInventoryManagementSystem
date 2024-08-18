@@ -42,5 +42,9 @@ namespace SimpleInventoryManagementSystem
             this.Price = price;
             this.Quantity = quantity;
         }
+        public override string ToString()
+        {
+            return $"Name = {this.Name}, Price = {this.Price}, Quantity = {this.quantity}";
+        }
     }
 }
