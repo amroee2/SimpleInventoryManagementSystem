@@ -1,4 +1,5 @@
 ﻿using SimpleInventoryManagementSystem;
+using System.Data.SqlClient;
 
 namespace Program
 {
@@ -6,6 +7,21 @@ namespace Program
     {
         public static void Main(string[] args)
         {
+
+            SqlConnection connection = ConnectionInitializer.InitializConnection();
+            try 
+            {
+                connection.Open(); 
+                
+            }
+            catch (SqlException e)
+            {
+                Console.WriteLine("Connection failed");
+                Console.WriteLine(e.Message);
+                return;
+            }
+            Console.WriteLine("Connection successful");
+
             Inventory inventory = new Inventory();
             Console.WriteLine("**** Welcome ****");
             while (true)
@@ -35,7 +51,7 @@ namespace Program
                         Console.WriteLine("Enter product name:");
                         string? name = Console.ReadLine();
                         Product product = inventory.SearchForProduct(name);
-                        if(product == null)
+                        if (product == null)
                         {
                             Console.WriteLine("\nProduct was not found in the inventory");
                         }
