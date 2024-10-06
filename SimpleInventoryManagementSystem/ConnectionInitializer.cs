@@ -10,6 +10,7 @@ namespace SimpleInventoryManagementSystem
             Console.WriteLine("Getting Connection");
             string connectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=InventoryManagementSystem;Integrated Security=True;";
             SqlConnection connection = new SqlConnection(connectionString);
+            connection.Open();
             return connection;
         }
     }
