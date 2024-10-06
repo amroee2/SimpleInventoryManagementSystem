@@ -8,20 +8,6 @@ namespace Program
         public static void Main(string[] args)
         {
 
-            SqlConnection connection = ConnectionInitializer.InitializConnection();
-            try 
-            {
-                connection.Open(); 
-                
-            }
-            catch (SqlException e)
-            {
-                Console.WriteLine("Connection failed");
-                Console.WriteLine(e.Message);
-                return;
-            }
-            Console.WriteLine("Connection successful");
-
             Inventory inventory = new Inventory();
             Console.WriteLine("**** Welcome ****");
             while (true)
@@ -39,7 +25,7 @@ namespace Program
                         inventory.AddProduct();
                         break;
                     case 2:
-                        inventory.ViewAllProducts();
+                        SqlDB.ViewAllProducts();
                         break;
                     case 3:
                         inventory.UpdateProduct();
@@ -50,10 +36,14 @@ namespace Program
                     case 5:
                         Console.WriteLine("Enter product name:");
                         string? name = Console.ReadLine();
-                        Product product = inventory.SearchForProduct(name);
+                        Product product = SqlDB.SearchForProduct(name);
                         if (product == null)
                         {
                             Console.WriteLine("\nProduct was not found in the inventory");
+                        }
+                        else
+                        {
+                            Console.WriteLine(product);
                         }
                         break;
                 }

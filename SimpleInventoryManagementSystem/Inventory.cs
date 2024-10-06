@@ -6,8 +6,6 @@ namespace SimpleInventoryManagementSystem
 {
     public class Inventory
     {
-        private static List<Product> inventory = new List<Product>();
-
         public Inventory() { }
 
         public void AddProduct()
@@ -18,7 +16,7 @@ namespace SimpleInventoryManagementSystem
             {
                 Console.Write("Name: ");
                 name = Console.ReadLine();
-                Product selectedProduct = SearchForProduct(name);
+                Product selectedProduct = SqlDB.SearchForProduct(name);
                 if (selectedProduct != null)
                 {
                     Console.WriteLine("Product already exists");
@@ -29,35 +27,21 @@ namespace SimpleInventoryManagementSystem
                 Console.Write("\nQuantity: ");
                 quantity = Convert.ToInt32(Console.ReadLine());
             }
-            catch (Exception e){
+            catch (Exception e)
+            {
                 Console.WriteLine("\nError occured in inputting the new product information\n");
                 Console.WriteLine(e);
                 return;
             }
-            Product product = new Product(name, price, quantity);
-            inventory.Add(product);
-            Console.WriteLine("\nAdded product successfully");
-        }
-        public void ViewAllProducts()
-        {
-            if (inventory.Count == 0)
-            {
-                Console.WriteLine("There are currently no products in the inventory");
-            }
-            else
-            {
-                foreach (Product product in inventory)
-                {
-                    Console.WriteLine(product);
-                }
-            }
+            Product newProduct = new Product(name, price, quantity);
 
+            SqlDB.AddProduct(newProduct);
         }
         public void UpdateProduct()
         {
             Console.Write("Enter Product Name: ");
             string ?name = Console.ReadLine();
-            Product selectedProduct = SearchForProduct(name);
+            Product selectedProduct = SqlDB.SearchForProduct(name);
             if(selectedProduct == null)
             {
                 Console.WriteLine("\nProduct was not found in the inventory");
@@ -83,18 +67,13 @@ namespace SimpleInventoryManagementSystem
             selectedProduct.Price = newPrice;
             selectedProduct.Quantity = newQuantity;
             selectedProduct.Name = newName;
-            Console.WriteLine($"Product information updated successfully!\n{selectedProduct.ToString()}");
+            SqlDB.UpdateProduct(selectedProduct, name);
         }
         public void DeleteProduct()
         {
-            if(inventory.Count == 0)
-            {
-                Console.WriteLine("There are currently no produts in the inventory");
-                return;
-            }
             Console.Write("Enter product name: ");
             string? name = Console.ReadLine();
-            Product selectedProduct = SearchForProduct(name);
+            Product selectedProduct = SqlDB.SearchForProduct(name);
             if (selectedProduct == null)
             {
                 Console.WriteLine("\nProduct was not found in the inventory");
@@ -106,29 +85,11 @@ namespace SimpleInventoryManagementSystem
             switch (operation)
             {
                 case 1:
-                    inventory.Remove(selectedProduct);
-                    Console.WriteLine("Product removed successfully\n");
+                    SqlDB.DeleteProduct(selectedProduct);
                     break;
                 case 2:
                     return;
             }
-        }
-        public Product SearchForProduct(string? name)
-        {
-            Product selectedProduct = null;
-            foreach (Product product in inventory)
-            {
-                if (product.Name == name)
-                {
-                    selectedProduct = product;
-                }
-            }
-            if (selectedProduct == null)
-            {
-                return selectedProduct;
-            }
-            Console.WriteLine(selectedProduct);
-            return selectedProduct;
         }
     }
 }
