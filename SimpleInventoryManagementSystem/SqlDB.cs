@@ -54,10 +54,13 @@ namespace SimpleInventoryManagementSystem
             SqlDataReader reader = command.ExecuteReader();
             if (reader.Read())
             {
+                int id = reader.GetInt32(0);
                 string productName = reader.GetString(1);
                 int price = reader.GetInt32(2);
                 int quantity = reader.GetInt32(3);
                 Product product = new Product(productName, price, quantity);
+                product.Id = id;
+
                 reader.Close();
                 return product;
             }
@@ -76,10 +79,12 @@ namespace SimpleInventoryManagementSystem
             {
                 while (reader.Read())
                 {
+                    int id = reader.GetInt32(0);
                     string productName = reader.GetString(1);
                     int price = reader.GetInt32(2);
                     int quantity = reader.GetInt32(3);
                     Product product = new Product(productName, price, quantity);
+                    product.Id = id;
                     Console.WriteLine(product);
                 }
             }
