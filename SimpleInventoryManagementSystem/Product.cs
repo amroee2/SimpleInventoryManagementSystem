@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SimpleInventoryManagementSystem
+﻿namespace SimpleInventoryManagementSystem
 {
     public class Product
     {
+        public int Id { get; set; }
         private string? name;
         private int price;
         private int quantity;
@@ -21,9 +16,9 @@ namespace SimpleInventoryManagementSystem
         public int Price
         {
             get { return price; }
-            set 
-            { 
-                if(value > 0)
+            set
+            {
+                if (value > 0)
                     price = value;
             }
         }
@@ -36,7 +31,7 @@ namespace SimpleInventoryManagementSystem
                     quantity = value;
             }
         }
-        public Product (string name, int price, int quantity)
+        public Product(string name, int price, int quantity)
         {
             this.Name = name;
             this.Price = price;
@@ -44,7 +39,7 @@ namespace SimpleInventoryManagementSystem
         }
         public override string ToString()
         {
-            return $"Name = {this.Name}, Price = {this.Price}, Quantity = {this.quantity}";
+            return $"Id = {this.Id}, Name = {this.Name}, Price = {this.Price}, Quantity = {this.Quantity}";
         }
     }
 }
