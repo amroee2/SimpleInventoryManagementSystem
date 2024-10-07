@@ -1,7 +1,12 @@
-﻿namespace SimpleInventoryManagementSystem
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+
+namespace SimpleInventoryManagementSystem
 {
     public class Product
     {
+        [BsonId]
+        [BsonRepresentation(BsonType.Int32)]
         public int Id { get; set; }
         private string? name;
         private int price;
