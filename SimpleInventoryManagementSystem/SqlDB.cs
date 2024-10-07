@@ -5,7 +5,7 @@ namespace SimpleInventoryManagementSystem
 {
     public class SqlDB : IDatabase
     {
-        public static SqlConnection _conn = ConnectionInitializer.InitializConnection();
+        public static SqlConnection _conn = ConnectionInitializer.InitializSqlConnection();
         public void AddProduct(Product product)
         {
             StringBuilder stringBuilder = new StringBuilder();
