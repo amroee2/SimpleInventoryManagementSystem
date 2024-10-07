@@ -8,7 +8,7 @@ namespace Program
         public static void Main(string[] args)
         {
 
-            Inventory inventory = new Inventory();
+            Inventory inventory = new Inventory(new SqlDB());
             Console.WriteLine("**** Welcome ****");
             while (true)
             {
@@ -25,7 +25,7 @@ namespace Program
                         inventory.AddProduct();
                         break;
                     case 2:
-                        SqlDB.ViewAllProducts();
+                        inventory.ViewAllProducts();
                         break;
                     case 3:
                         inventory.UpdateProduct();
@@ -36,7 +36,7 @@ namespace Program
                     case 5:
                         Console.WriteLine("Enter product name:");
                         string? name = Console.ReadLine();
-                        Product product = SqlDB.SearchForProduct(name);
+                        Product product = inventory.SearchForProduct(name);
                         if (product == null)
                         {
                             Console.WriteLine("\nProduct was not found in the inventory");

@@ -91,5 +91,15 @@
                     return;
             }
         }
+
+        public void ViewAllProducts()
+        {
+            _database.ViewAllProducts();
+        }
+
+        public Product SearchForProduct(string name)
+        {
+            return _database.SearchForProduct(name);
+        }
     }
 }
