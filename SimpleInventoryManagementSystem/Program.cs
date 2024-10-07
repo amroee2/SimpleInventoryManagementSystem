@@ -7,8 +7,23 @@ namespace Program
     {
         public static void Main(string[] args)
         {
-
-            Inventory inventory = new Inventory(new SqlDB());
+            Console.WriteLine("Enter connection type");
+            Console.WriteLine("1-Sql\n2-NoSql");
+            Enum.TryParse(Console.ReadLine(), out DatabaseType connectionType);
+            IDatabase database;
+            switch(connectionType)
+            {
+                case DatabaseType.SQL:
+                    database = new SqlDB();
+                    break;
+                case DatabaseType.NoSQL:
+                    database = new NoSqlDB();
+                    break;
+                default:
+                    database = new SqlDB();
+                    break;
+            }
+            Inventory inventory = new Inventory(database);
             Console.WriteLine("**** Welcome ****");
             while (true)
             {
