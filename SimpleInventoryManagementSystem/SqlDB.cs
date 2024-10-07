@@ -3,10 +3,10 @@ using System.Text;
 
 namespace SimpleInventoryManagementSystem
 {
-    public class SqlDB
+    public class SqlDB : IDatabase
     {
         public static SqlConnection _conn = ConnectionInitializer.InitializConnection();
-        public static void AddProduct(Product product)
+        public void AddProduct(Product product)
         {
             StringBuilder stringBuilder = new StringBuilder();
 
@@ -18,7 +18,7 @@ namespace SimpleInventoryManagementSystem
             Console.WriteLine("\nAdded product successfully");
         }
 
-        public static void DeleteProduct(Product product)
+        public void DeleteProduct(Product product)
         {
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.Append("DELETE FROM Products WHERE Name = ");
@@ -29,7 +29,7 @@ namespace SimpleInventoryManagementSystem
             Console.WriteLine("\nDeleted product successfully");
         }
 
-        public static void UpdateProduct(Product newProduct, string oldName)
+        public void UpdateProduct(Product newProduct, string oldName)
         {
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.Append("UPDATE Products SET ");
@@ -44,7 +44,7 @@ namespace SimpleInventoryManagementSystem
             Console.WriteLine("\nUpdated product successfully");
         }
 
-        public static Product SearchForProduct(string name)
+        public Product SearchForProduct(string name)
         {
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.Append("SELECT * FROM Products WHERE Name = ");
@@ -65,7 +65,7 @@ namespace SimpleInventoryManagementSystem
             return null;
         }
 
-        public static void ViewAllProducts()
+        public void ViewAllProducts()
         {
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.Append("SELECT * FROM Products");

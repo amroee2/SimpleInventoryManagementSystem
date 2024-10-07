@@ -1,12 +1,12 @@
-﻿using System.Diagnostics;
-using System.Runtime.CompilerServices;
-using System.Xml.Linq;
-
-namespace SimpleInventoryManagementSystem
+﻿namespace SimpleInventoryManagementSystem
 {
     public class Inventory
     {
-        public Inventory() { }
+        IDatabase _database;
+        public Inventory(IDatabase database)
+        {
+            _database = database;
+        }
 
         public void AddProduct()
         {
@@ -16,7 +16,7 @@ namespace SimpleInventoryManagementSystem
             {
                 Console.Write("Name: ");
                 name = Console.ReadLine();
-                Product selectedProduct = SqlDB.SearchForProduct(name);
+                Product selectedProduct = _database.SearchForProduct(name);
                 if (selectedProduct != null)
                 {
                     Console.WriteLine("Product already exists");
@@ -35,14 +35,14 @@ namespace SimpleInventoryManagementSystem
             }
             Product newProduct = new Product(name, price, quantity);
 
-            SqlDB.AddProduct(newProduct);
+            _database.AddProduct(newProduct);
         }
         public void UpdateProduct()
         {
             Console.Write("Enter Product Name: ");
-            string ?name = Console.ReadLine();
-            Product selectedProduct = SqlDB.SearchForProduct(name);
-            if(selectedProduct == null)
+            string? name = Console.ReadLine();
+            Product selectedProduct = _database.SearchForProduct(name);
+            if (selectedProduct == null)
             {
                 Console.WriteLine("\nProduct was not found in the inventory");
                 return;
@@ -67,13 +67,13 @@ namespace SimpleInventoryManagementSystem
             selectedProduct.Price = newPrice;
             selectedProduct.Quantity = newQuantity;
             selectedProduct.Name = newName;
-            SqlDB.UpdateProduct(selectedProduct, name);
+            _database.UpdateProduct(selectedProduct, name);
         }
         public void DeleteProduct()
         {
             Console.Write("Enter product name: ");
             string? name = Console.ReadLine();
-            Product selectedProduct = SqlDB.SearchForProduct(name);
+            Product selectedProduct = _database.SearchForProduct(name);
             if (selectedProduct == null)
             {
                 Console.WriteLine("\nProduct was not found in the inventory");
@@ -85,7 +85,7 @@ namespace SimpleInventoryManagementSystem
             switch (operation)
             {
                 case 1:
-                    SqlDB.DeleteProduct(selectedProduct);
+                    _database.DeleteProduct(selectedProduct);
                     break;
                 case 2:
                     return;
