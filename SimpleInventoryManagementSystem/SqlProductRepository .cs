@@ -6,7 +6,12 @@ namespace SimpleInventoryManagementSystem
 {
     public class SqlDB : IProductRepository
     {
-        public static SqlConnection _database = ConnectionInitializer.InitializSqlConnection();
+        public static SqlConnection _database;
+
+        public SqlDB()
+        {
+            _database = ConnectionInitializer.InitializSqlConnection();
+        }
         public async Task AddProductAsync(Product product)
         {
             StringBuilder stringBuilder = new StringBuilder();

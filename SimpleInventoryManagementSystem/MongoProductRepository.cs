@@ -6,16 +6,22 @@ namespace SimpleInventoryManagementSystem
     public class MongoProductRepository : IProductRepository
     {
 
-        IMongoDatabase _database = ConnectionInitializer.InitializeMongoConnection();
+        IMongoDatabase _database;
+        IMongoCollection<Product> _collection;
+
+        public MongoProductRepository()
+        {
+            _database = ConnectionInitializer.InitializeMongoConnection();
+            _collection = _database.GetCollection<Product>("products");
+        }
 
 
         public async Task AddProductAsync(Product product)
         {
             try
             {
-                var collection = _database.GetCollection<Product>("products");
                 product.Id = await MaxProductIdAsync() + 1;
-                await collection.InsertOneAsync(product);
+                await _collection.InsertOneAsync(product);
                 Console.WriteLine("Product added successfully");
             }
             catch (Exception ex)
@@ -29,9 +35,8 @@ namespace SimpleInventoryManagementSystem
         {
             try
             {
-                var collection = _database.GetCollection<Product>("products");
                 var filter = Builders<Product>.Filter.Eq("Name", product.Name);
-                await collection.DeleteOneAsync(filter);
+                await _collection.DeleteOneAsync(filter);
                 Console.WriteLine("Product deleted successfully");
             }
             catch (Exception ex)
@@ -44,13 +49,12 @@ namespace SimpleInventoryManagementSystem
         {
             try
             {
-                var collection = _database.GetCollection<Product>("products");
                 var filter = Builders<Product>.Filter.Eq("Name", oldName);
                 var update = Builders<Product>.Update
                     .Set("Name", newProduct.Name)
                     .Set("Price", newProduct.Price)
                     .Set("Quantity", newProduct.Quantity);
-                await collection.UpdateOneAsync(filter, update);
+                await _collection.UpdateOneAsync(filter, update);
                 Console.WriteLine("Product updated successfully");
             }
             catch (Exception ex)
@@ -63,9 +67,8 @@ namespace SimpleInventoryManagementSystem
         {
             try
             {
-                var collection = _database.GetCollection<Product>("products");
                 var filter = Builders<Product>.Filter.Eq("Name", name);
-                var product = await collection.Find(filter).FirstOrDefaultAsync();
+                var product = await _collection.Find(filter).FirstOrDefaultAsync();
                 return product;
             }
             catch (Exception ex)
@@ -79,8 +82,7 @@ namespace SimpleInventoryManagementSystem
         {
             try
             {
-                var collection = _database.GetCollection<Product>("products");
-                var products = await collection.Find(new BsonDocument()).ToListAsync();
+                var products = await _collection.Find(new BsonDocument()).ToListAsync();
                 foreach (var product in products)
                 {
                     Console.WriteLine(product);
@@ -96,8 +98,7 @@ namespace SimpleInventoryManagementSystem
         {
             try
             {
-                var collection = _database.GetCollection<Product>("products");
-                var maxProduct = await collection.Find(new BsonDocument())
+                var maxProduct = await _collection.Find(new BsonDocument())
                     .Sort(Builders<Product>.Sort.Descending("Id"))
                     .Limit(1)
                     .FirstOrDefaultAsync();
