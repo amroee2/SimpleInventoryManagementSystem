@@ -1,35 +1,36 @@
 ﻿using System.Data.SqlClient;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace SimpleInventoryManagementSystem
 {
     public class SqlDB : IProductRepository
     {
-        public static SqlConnection _conn = ConnectionInitializer.InitializSqlConnection();
-        public void AddProduct(Product product)
+        public static SqlConnection _database = ConnectionInitializer.InitializSqlConnection();
+        public async Task AddProductAsync(Product product)
         {
             StringBuilder stringBuilder = new StringBuilder();
 
             stringBuilder.Append("INSERT INTO Products (Name, Price, Quantity) VALUES");
             stringBuilder.Append($"('{product.Name}', {product.Price}, {product.Quantity})");
             string query = stringBuilder.ToString();
-            SqlCommand command = new SqlCommand(query, _conn);
-            command.ExecuteNonQuery();
+            SqlCommand command = new SqlCommand(query, _database);
+            await command.ExecuteNonQueryAsync();
             Console.WriteLine("\nAdded product successfully");
         }
 
-        public void DeleteProduct(Product product)
+        public async Task DeleteProductAsync(Product product)
         {
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.Append("DELETE FROM Products WHERE Name = ");
             stringBuilder.Append($"'{product.Name}'");
             string query = stringBuilder.ToString();
-            SqlCommand command = new SqlCommand(query, _conn);
-            command.ExecuteNonQuery();
+            SqlCommand command = new SqlCommand(query, _database);
+            await command.ExecuteNonQueryAsync();
             Console.WriteLine("\nDeleted product successfully");
         }
 
-        public void UpdateProduct(Product newProduct, string oldName)
+        public async Task UpdateProductAsync(Product newProduct, string oldName)
         {
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.Append("UPDATE Products SET ");
@@ -39,19 +40,19 @@ namespace SimpleInventoryManagementSystem
             stringBuilder.Append($"WHERE Name = '{oldName}'");
             string query = stringBuilder.ToString();
 
-            SqlCommand command = new SqlCommand(query, _conn);
-            command.ExecuteNonQuery();
+            SqlCommand command = new SqlCommand(query, _database);
+            await command.ExecuteNonQueryAsync();
             Console.WriteLine("\nUpdated product successfully");
         }
 
-        public Product SearchForProduct(string name)
+        public async Task<Product> SearchForProductAsync(string name)
         {
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.Append("SELECT * FROM Products WHERE Name = ");
             stringBuilder.Append($"'{name}'");
             string query = stringBuilder.ToString();
-            SqlCommand command = new SqlCommand(query, _conn);
-            SqlDataReader reader = command.ExecuteReader();
+            SqlCommand command = new SqlCommand(query, _database);
+            SqlDataReader reader = await command.ExecuteReaderAsync();
             if (reader.Read())
             {
                 int id = reader.GetInt32(0);
@@ -68,13 +69,13 @@ namespace SimpleInventoryManagementSystem
             return null;
         }
 
-        public void ViewAllProducts()
+        public async Task ViewAllProductsAsync()
         {
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.Append("SELECT * FROM Products");
             string query = stringBuilder.ToString();
-            SqlCommand command = new SqlCommand(query, _conn);
-            SqlDataReader reader = command.ExecuteReader();
+            SqlCommand command = new SqlCommand(query, _database);
+            SqlDataReader reader = await command.ExecuteReaderAsync();
             if (reader.HasRows)
             {
                 while (reader.Read())
