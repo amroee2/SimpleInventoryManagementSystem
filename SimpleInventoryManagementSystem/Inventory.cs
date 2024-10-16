@@ -1,14 +1,12 @@
-﻿using System.Diagnostics;
-using System.Runtime.CompilerServices;
-using System.Xml.Linq;
-
-namespace SimpleInventoryManagementSystem
+﻿namespace SimpleInventoryManagementSystem
 {
     public class Inventory
     {
-        private static List<Product> inventory = new List<Product>();
-
-        public Inventory() { }
+        IProductRepository _database;
+        public Inventory(IProductRepository database)
+        {
+            _database = database;
+        }
 
         public void AddProduct()
         {
@@ -18,7 +16,7 @@ namespace SimpleInventoryManagementSystem
             {
                 Console.Write("Name: ");
                 name = Console.ReadLine();
-                Product selectedProduct = SearchForProduct(name);
+                Product selectedProduct = _database.SearchForProductAsync(name).Result;
                 if (selectedProduct != null)
                 {
                     Console.WriteLine("Product already exists");
@@ -29,36 +27,22 @@ namespace SimpleInventoryManagementSystem
                 Console.Write("\nQuantity: ");
                 quantity = Convert.ToInt32(Console.ReadLine());
             }
-            catch (Exception e){
+            catch (Exception e)
+            {
                 Console.WriteLine("\nError occured in inputting the new product information\n");
                 Console.WriteLine(e);
                 return;
             }
-            Product product = new Product(name, price, quantity);
-            inventory.Add(product);
-            Console.WriteLine("\nAdded product successfully");
-        }
-        public void ViewAllProducts()
-        {
-            if (inventory.Count == 0)
-            {
-                Console.WriteLine("There are currently no products in the inventory");
-            }
-            else
-            {
-                foreach (Product product in inventory)
-                {
-                    Console.WriteLine(product);
-                }
-            }
+            Product newProduct = new Product(name, price, quantity);
 
+            _database.AddProductAsync(newProduct);
         }
         public void UpdateProduct()
         {
             Console.Write("Enter Product Name: ");
-            string ?name = Console.ReadLine();
-            Product selectedProduct = SearchForProduct(name);
-            if(selectedProduct == null)
+            string? name = Console.ReadLine();
+            Product selectedProduct = _database.SearchForProductAsync(name).Result;
+            if (selectedProduct == null)
             {
                 Console.WriteLine("\nProduct was not found in the inventory");
                 return;
@@ -83,18 +67,13 @@ namespace SimpleInventoryManagementSystem
             selectedProduct.Price = newPrice;
             selectedProduct.Quantity = newQuantity;
             selectedProduct.Name = newName;
-            Console.WriteLine($"Product information updated successfully!\n{selectedProduct.ToString()}");
+            _database.UpdateProductAsync(selectedProduct, name);
         }
         public void DeleteProduct()
         {
-            if(inventory.Count == 0)
-            {
-                Console.WriteLine("There are currently no produts in the inventory");
-                return;
-            }
             Console.Write("Enter product name: ");
             string? name = Console.ReadLine();
-            Product selectedProduct = SearchForProduct(name);
+            Product selectedProduct = _database.SearchForProductAsync(name).Result;
             if (selectedProduct == null)
             {
                 Console.WriteLine("\nProduct was not found in the inventory");
@@ -106,29 +85,21 @@ namespace SimpleInventoryManagementSystem
             switch (operation)
             {
                 case 1:
-                    inventory.Remove(selectedProduct);
-                    Console.WriteLine("Product removed successfully\n");
+                    _database.DeleteProductAsync(selectedProduct);
                     break;
                 case 2:
                     return;
             }
         }
-        public Product SearchForProduct(string? name)
+
+        public void ViewAllProducts()
         {
-            Product selectedProduct = null;
-            foreach (Product product in inventory)
-            {
-                if (product.Name == name)
-                {
-                    selectedProduct = product;
-                }
-            }
-            if (selectedProduct == null)
-            {
-                return selectedProduct;
-            }
-            Console.WriteLine(selectedProduct);
-            return selectedProduct;
+            _database.ViewAllProductsAsync();
+        }
+
+        public Product SearchForProduct(string name)
+        {
+            return _database.SearchForProductAsync(name).Result;
         }
     }
 }

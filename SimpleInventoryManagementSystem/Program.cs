@@ -1,4 +1,5 @@
 ﻿using SimpleInventoryManagementSystem;
+using System.Data.SqlClient;
 
 namespace Program
 {
@@ -6,7 +7,23 @@ namespace Program
     {
         public static void Main(string[] args)
         {
-            Inventory inventory = new Inventory();
+            Console.WriteLine("Enter connection type");
+            Console.WriteLine("1-Sql\n2-NoSql");
+            Enum.TryParse(Console.ReadLine(), out DatabaseType connectionType);
+            IProductRepository database;
+            switch(connectionType)
+            {
+                case DatabaseType.SQL:
+                    database = new SqlDB();
+                    break;
+                case DatabaseType.NoSQL:
+                    database = new MongoProductRepository();
+                    break;
+                default:
+                    database = new SqlDB();
+                    break;
+            }
+            Inventory inventory = new Inventory(database);
             Console.WriteLine("**** Welcome ****");
             while (true)
             {
@@ -35,9 +52,13 @@ namespace Program
                         Console.WriteLine("Enter product name:");
                         string? name = Console.ReadLine();
                         Product product = inventory.SearchForProduct(name);
-                        if(product == null)
+                        if (product == null)
                         {
                             Console.WriteLine("\nProduct was not found in the inventory");
+                        }
+                        else
+                        {
+                            Console.WriteLine(product);
                         }
                         break;
                 }
