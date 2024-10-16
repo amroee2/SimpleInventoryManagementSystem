@@ -6,6 +6,6 @@
         Task DeleteProductAsync(Product product);
         Task UpdateProductAsync(Product newProduct, string oldName);
         Task<Product> SearchForProductAsync(string name);
-        Task ViewAllProductAsync();
+        Task ViewAllProductsAsync();
     }
 }

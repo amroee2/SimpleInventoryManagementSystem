@@ -16,7 +16,7 @@
             {
                 Console.Write("Name: ");
                 name = Console.ReadLine();
-                Product selectedProduct = _database.SearchForProduct(name);
+                Product selectedProduct = _database.SearchForProductAsync(name).Result;
                 if (selectedProduct != null)
                 {
                     Console.WriteLine("Product already exists");
@@ -35,13 +35,13 @@
             }
             Product newProduct = new Product(name, price, quantity);
 
-            _database.AddProduct(newProduct);
+            _database.AddProductAsync(newProduct);
         }
         public void UpdateProduct()
         {
             Console.Write("Enter Product Name: ");
             string? name = Console.ReadLine();
-            Product selectedProduct = _database.SearchForProduct(name);
+            Product selectedProduct = _database.SearchForProductAsync(name).Result;
             if (selectedProduct == null)
             {
                 Console.WriteLine("\nProduct was not found in the inventory");
@@ -67,13 +67,13 @@
             selectedProduct.Price = newPrice;
             selectedProduct.Quantity = newQuantity;
             selectedProduct.Name = newName;
-            _database.UpdateProduct(selectedProduct, name);
+            _database.UpdateProductAsync(selectedProduct, name);
         }
         public void DeleteProduct()
         {
             Console.Write("Enter product name: ");
             string? name = Console.ReadLine();
-            Product selectedProduct = _database.SearchForProduct(name);
+            Product selectedProduct = _database.SearchForProductAsync(name).Result;
             if (selectedProduct == null)
             {
                 Console.WriteLine("\nProduct was not found in the inventory");
@@ -85,7 +85,7 @@
             switch (operation)
             {
                 case 1:
-                    _database.DeleteProduct(selectedProduct);
+                    _database.DeleteProductAsync(selectedProduct);
                     break;
                 case 2:
                     return;
@@ -94,12 +94,12 @@
 
         public void ViewAllProducts()
         {
-            _database.ViewAllProducts();
+            _database.ViewAllProductsAsync();
         }
 
         public Product SearchForProduct(string name)
         {
-            return _database.SearchForProduct(name);
+            return _database.SearchForProductAsync(name).Result;
         }
     }
 }

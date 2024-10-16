@@ -6,14 +6,14 @@ namespace SimpleInventoryManagementSystem
     public class MongoProductRepository : IProductRepository
     {
 
-        IMongoDatabase database = ConnectionInitializer.InitializeMongoConnection();
+        IMongoDatabase _database = ConnectionInitializer.InitializeMongoConnection();
 
 
         public async Task AddProductAsync(Product product)
         {
             try
             {
-                var collection = database.GetCollection<Product>("products");
+                var collection = _database.GetCollection<Product>("products");
                 product.Id = await MaxProductIdAsync() + 1;
                 await collection.InsertOneAsync(product);
                 Console.WriteLine("Product added successfully");
@@ -29,7 +29,7 @@ namespace SimpleInventoryManagementSystem
         {
             try
             {
-                var collection = database.GetCollection<Product>("products");
+                var collection = _database.GetCollection<Product>("products");
                 var filter = Builders<Product>.Filter.Eq("Name", product.Name);
                 await collection.DeleteOneAsync(filter);
                 Console.WriteLine("Product deleted successfully");
@@ -44,7 +44,7 @@ namespace SimpleInventoryManagementSystem
         {
             try
             {
-                var collection = database.GetCollection<Product>("products");
+                var collection = _database.GetCollection<Product>("products");
                 var filter = Builders<Product>.Filter.Eq("Name", oldName);
                 var update = Builders<Product>.Update
                     .Set("Name", newProduct.Name)
@@ -63,7 +63,7 @@ namespace SimpleInventoryManagementSystem
         {
             try
             {
-                var collection = database.GetCollection<Product>("products");
+                var collection = _database.GetCollection<Product>("products");
                 var filter = Builders<Product>.Filter.Eq("Name", name);
                 var product = await collection.Find(filter).FirstOrDefaultAsync();
                 return product;
@@ -75,11 +75,11 @@ namespace SimpleInventoryManagementSystem
             }
         }
 
-        public async Task ViewAllProductAsync()
+        public async Task ViewAllProductsAsync()
         {
             try
             {
-                var collection = database.GetCollection<Product>("products");
+                var collection = _database.GetCollection<Product>("products");
                 var products = await collection.Find(new BsonDocument()).ToListAsync();
                 foreach (var product in products)
                 {
@@ -96,7 +96,7 @@ namespace SimpleInventoryManagementSystem
         {
             try
             {
-                var collection = database.GetCollection<Product>("products");
+                var collection = _database.GetCollection<Product>("products");
                 var maxProduct = await collection.Find(new BsonDocument())
                     .Sort(Builders<Product>.Sort.Descending("Id"))
                     .Limit(1)
