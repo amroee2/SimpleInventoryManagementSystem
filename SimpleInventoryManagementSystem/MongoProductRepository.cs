@@ -9,13 +9,13 @@ namespace SimpleInventoryManagementSystem
         IMongoDatabase database = ConnectionInitializer.InitializeMongoConnection();
 
 
-        public void AddProduct(Product product)
+        public async Task AddProductAsync(Product product)
         {
             try
             {
                 var collection = database.GetCollection<Product>("products");
-                product.Id = MaxProductId() + 1;
-                collection.InsertOne(product);
+                product.Id = await MaxProductIdAsync() + 1;
+                await collection.InsertOneAsync(product);
                 Console.WriteLine("Product added successfully");
             }
             catch (Exception ex)
@@ -24,13 +24,14 @@ namespace SimpleInventoryManagementSystem
             }
         }
 
-        public void DeleteProduct(Product product)
+
+        public async Task DeleteProductAsync(Product product)
         {
             try
             {
                 var collection = database.GetCollection<Product>("products");
                 var filter = Builders<Product>.Filter.Eq("Name", product.Name);
-                collection.DeleteOne(filter);
+                await collection.DeleteOneAsync(filter);
                 Console.WriteLine("Product deleted successfully");
             }
             catch (Exception ex)
@@ -39,7 +40,7 @@ namespace SimpleInventoryManagementSystem
             }
         }
 
-        public void UpdateProduct(Product newProduct, string oldName)
+        public async Task UpdateProductAsync(Product newProduct, string oldName)
         {
             try
             {
@@ -49,7 +50,7 @@ namespace SimpleInventoryManagementSystem
                     .Set("Name", newProduct.Name)
                     .Set("Price", newProduct.Price)
                     .Set("Quantity", newProduct.Quantity);
-                collection.UpdateOne(filter, update);
+                await collection.UpdateOneAsync(filter, update);
                 Console.WriteLine("Product updated successfully");
             }
             catch (Exception ex)
@@ -58,13 +59,13 @@ namespace SimpleInventoryManagementSystem
             }
         }
 
-        public Product SearchForProduct(string name)
+        public async Task<Product> SearchForProductAsync(string name)
         {
             try
             {
                 var collection = database.GetCollection<Product>("products");
                 var filter = Builders<Product>.Filter.Eq("Name", name);
-                var product = collection.Find(filter).FirstOrDefault();
+                var product = await collection.Find(filter).FirstOrDefaultAsync();
                 return product;
             }
             catch (Exception ex)
@@ -74,12 +75,12 @@ namespace SimpleInventoryManagementSystem
             }
         }
 
-        public void ViewAllProducts()
+        public async Task ViewAllProductAsync()
         {
             try
             {
                 var collection = database.GetCollection<Product>("products");
-                var products = collection.Find(new BsonDocument()).ToList();
+                var products = await collection.Find(new BsonDocument()).ToListAsync();
                 foreach (var product in products)
                 {
                     Console.WriteLine(product);
@@ -91,15 +92,15 @@ namespace SimpleInventoryManagementSystem
             }
         }
 
-        public int MaxProductId()
+        public async Task<int> MaxProductIdAsync()
         {
             try
             {
                 var collection = database.GetCollection<Product>("products");
-                var maxProduct = collection.Find(new BsonDocument())
+                var maxProduct = await collection.Find(new BsonDocument())
                     .Sort(Builders<Product>.Sort.Descending("Id"))
                     .Limit(1)
-                    .FirstOrDefault();
+                    .FirstOrDefaultAsync();
                 return maxProduct != null ? maxProduct.Id : 0;
             }
             catch (Exception ex)
