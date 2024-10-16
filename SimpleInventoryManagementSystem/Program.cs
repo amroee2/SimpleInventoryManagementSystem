@@ -10,14 +10,14 @@ namespace Program
             Console.WriteLine("Enter connection type");
             Console.WriteLine("1-Sql\n2-NoSql");
             Enum.TryParse(Console.ReadLine(), out DatabaseType connectionType);
-            IDatabase database;
+            IProductRepository database;
             switch(connectionType)
             {
                 case DatabaseType.SQL:
                     database = new SqlDB();
                     break;
                 case DatabaseType.NoSQL:
-                    database = new NoSqlDB();
+                    database = new MongoProductRepository();
                     break;
                 default:
                     database = new SqlDB();

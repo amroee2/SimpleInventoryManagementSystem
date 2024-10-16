@@ -1,6 +1,6 @@
 ﻿namespace SimpleInventoryManagementSystem
 {
-    public interface IDatabase
+    public interface IProductRepository
     {
         void AddProduct(Product product);
         void DeleteProduct(Product product);

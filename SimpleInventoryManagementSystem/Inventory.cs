@@ -2,8 +2,8 @@
 {
     public class Inventory
     {
-        IDatabase _database;
-        public Inventory(IDatabase database)
+        IProductRepository _database;
+        public Inventory(IProductRepository database)
         {
             _database = database;
         }

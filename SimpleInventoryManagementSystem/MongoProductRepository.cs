@@ -3,7 +3,7 @@ using MongoDB.Driver;
 
 namespace SimpleInventoryManagementSystem
 {
-    public class NoSqlDB : IDatabase
+    public class MongoProductRepository : IProductRepository
     {
 
         IMongoDatabase database = ConnectionInitializer.InitializeMongoConnection();

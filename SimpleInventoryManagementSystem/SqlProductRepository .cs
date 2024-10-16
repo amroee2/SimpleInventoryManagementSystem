@@ -3,7 +3,7 @@ using System.Text;
 
 namespace SimpleInventoryManagementSystem
 {
-    public class SqlDB : IDatabase
+    public class SqlDB : IProductRepository
     {
         public static SqlConnection _conn = ConnectionInitializer.InitializSqlConnection();
         public void AddProduct(Product product)
